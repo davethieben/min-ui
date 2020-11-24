@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
     entry: "./src/index.ts",
-    devtool: "inline-source-map",
+    devtool: "source-map",
     module: {
         rules: [{
             test: /\.tsx?$/,
@@ -11,7 +11,7 @@ module.exports = {
         }]
     },
     resolve: {
-        extensions: [".ts"]
+        extensions: [".ts", ".js"]
     },
     output: {
         filename: "min.js",

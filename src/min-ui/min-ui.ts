@@ -1,15 +1,24 @@
-﻿import container from "./inversify.config";
+﻿import { inject } from "inversify";
+import container from "./inversify.config";
 import { Services } from "./types";
 import { IExecutor } from "./services/executor";
 import { IParser } from "./services/parser";
 import { IPublisher } from "./services/publisher";
 
+declare global
+{
+    interface Window
+    {
+        min: Min;
+    }
+}
+
 export class Min
 {
     constructor(
-        private _parser: IParser,
-        private _executor: IExecutor,
-        private _publisher: IPublisher)
+        @inject(Services.Parser) private _parser: IParser,
+        @inject(Services.Executor) private _executor: IExecutor,
+        @inject(Services.Publisher) private _publisher: IPublisher)
     {
     }
 
@@ -44,6 +53,7 @@ export class Min
         const min = container.get<Min>(Services.Min);
         min.init();
 
+        window.min = min;
         return min;
     }
 

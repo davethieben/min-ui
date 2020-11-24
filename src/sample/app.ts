@@ -2,7 +2,6 @@
 
 $(() =>
 {
-    globalThis.min = Min.bootstrap();
+    Min.bootstrap();
 
 });
-
