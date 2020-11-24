@@ -1,8 +1,8 @@
-﻿import { App } from "./min-ui/min-ui";
+﻿import { Min } from "../min-ui/min-ui";
 
 $(() =>
 {
-    globalThis.app = App.bootstrap();
+    globalThis.min = Min.bootstrap();
 
 });
 

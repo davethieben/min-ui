@@ -1,12 +1,13 @@
 ﻿import { Container } from "inversify";
-import { Services } from "./types.js";
-import { Command, Commands } from "./commands/command.js";
-import { IExecutor, Executor } from "./services/executor.js";
-import { ILogFactory, LogFactory } from "./services/logFactory.js";
-import { IPublisher, Publisher } from "./services/publisher.js";
-import { FetchCommand } from "./commands/fetchCommand.js";
-import { FillCommand } from "./commands/fillCommand.js";
-import { IParser, Parser } from "./services/parser.js";
+
+import { Services } from "./types";
+import { Command, Commands } from "./commands/command";
+import { IExecutor, Executor } from "./services/executor";
+import { ILogFactory, LogFactory } from "./services/logFactory";
+import { IPublisher, Publisher } from "./services/publisher";
+import { FetchCommand } from "./commands/fetchCommand";
+import { FillCommand } from "./commands/fillCommand";
+import { IParser, Parser } from "./services/parser";
 
 var container = new Container();
 

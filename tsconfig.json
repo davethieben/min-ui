@@ -7,11 +7,12 @@
         "module": "ES2020",
         "moduleResolution": "node",
         "noEmitOnError": true,
-        "noImplicitAny": false,
+        "noImplicitAny": true,
+        "outDir": "./dist/",
         "removeComments": false,
         "sourceMap": true,
         "target": "ES2020",
-        "types": [ "reflect-metadata" ]
+        "types": [ "reflect-metadata", "jquery" ]
     },
     "exclude": [
         "node_modules",

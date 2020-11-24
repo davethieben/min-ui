@@ -3,7 +3,7 @@ import { Command } from "../commands/command.js";
 
 export interface IExecutor
 {
-    register(command: Command | { new(); });
+    register(command: Command | { new(): any; }): void;
     invokeAsync(command: any, args: any): Promise<boolean>;
 }
 
@@ -18,7 +18,7 @@ export class Executor implements IExecutor
 
     public register(command: Command | (new () => any))
     {
-        let ctor = command as { new(); };
+        let ctor = command as { new(): any; };
         if (ctor !== undefined)
         {
             command = new ctor();

@@ -1,6 +1,6 @@
 ﻿
 const Services = {
-    App: Symbol("App"),
+    Min: Symbol("Min"),
     Executor: Symbol("Executor"),
     LogFactory: Symbol("LogFactory"),
     Parser: Symbol("Parser"),

@@ -9,7 +9,7 @@ export interface IPublisher
 @injectable()
 export class Publisher implements IPublisher
 {
-    private _registrations = {};
+    private _registrations: { [key: string]: any; } = {};
 
     subscribe(name: string, callback: (args: any) => void): Function
     {

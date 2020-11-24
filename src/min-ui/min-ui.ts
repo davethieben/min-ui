@@ -4,7 +4,7 @@ import { IExecutor } from "./services/executor";
 import { IParser } from "./services/parser";
 import { IPublisher } from "./services/publisher";
 
-export class App
+export class Min
 {
     constructor(
         private _parser: IParser,
@@ -13,23 +13,25 @@ export class App
     {
     }
 
-    public init(target?: JQuery)
+    public init(target?: HTMLElement)
     {
-        target = target || jQuery(document.body);
+        target = target || document.body;
 
         const commands = this._parser.parse(target);
 
-        new Promise<never>(async (resolve, reject) =>
+        async function execute()
         {
-            var args = { target };
-            for (var command of commands)
+            const args = { target };
+            for (const command of commands)
             {
                 if (!await this._executor.invokeAsync(command, args))
                     break;
             }
 
             console.debug("App.init done");
-        });
+        }
+
+        execute();
     }
 
     public on(eventName: string, callback: (args: any) => void): Function
@@ -37,14 +39,14 @@ export class App
         return this._publisher.subscribe(eventName, callback);
     }
 
-    public static bootstrap(): App
+    public static bootstrap(): Min
     {
-        const app = container.get<App>(Services.App);
-        app.init();
+        const min = container.get<Min>(Services.Min);
+        min.init();
 
-        return app;
+        return min;
     }
 
 }
 
-export default App;
+export default Min;

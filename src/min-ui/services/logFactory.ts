@@ -7,10 +7,10 @@ export interface ILogFactory
 
 export interface ILogger
 {
-    debug(message: string);
-    info(message: string);
-    warn(message: string);
-    error(message: string);
+    debug(message: string): void;
+    info(message: string): void;
+    warn(message: string): void;
+    error(message: string): void;
 }
 
 @injectable()

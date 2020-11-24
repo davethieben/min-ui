@@ -3,7 +3,7 @@ import { ILogFactory, ILogger } from "./logFactory.js";
 
 export interface IParser
 {
-    parse(fragment: JQuery): any[][];
+    parse(fragment: JQuery<HTMLElement> | HTMLElement): any[][];
 }
 
 @injectable()
@@ -16,16 +16,20 @@ export class Parser implements IParser
         this._logger = logFactory.createLogger("Parser");
     }
 
-    public parse(fragment: JQuery): any[][]
+    public parse(fragment: JQuery<HTMLElement> | HTMLElement): any[][]
     {
         var commands = new Array<any[]>();
 
-        fragment.find("[on]")
+        var jqElem = fragment as JQuery<HTMLElement>;
+        if (jqElem === undefined)
+            jqElem = $(fragment);
+
+        jqElem.find("[on]")
             .each((index: number, element: HTMLElement) =>
             {
                 this._logger.debug(`found: ${element}`);
 
-                let commandText = element.attributes["change"]?.value as string;
+                let commandText = element.attributes.getNamedItem("change")?.value as string;
                 commandText = (commandText || "").replace(/\'/g, "\"");
 
                 let parsed = JSON.parse(commandText);
