@@ -1,0 +1,19 @@
+{
+  "name": "min-ui",
+  "version": "1.0.0",
+  "description": "minimal ui framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davethieben/min-ui.git"
+  },
+  "author": "Dave Thieben",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davethieben/min-ui/issues"
+  },
+  "homepage": "https://github.com/davethieben/min-ui#readme"
+}
