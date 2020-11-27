@@ -26,6 +26,11 @@ namespace sample
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddLogging(logger =>
+            {
+                logger.AddDebug();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +44,8 @@ namespace sample
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseFileServer();
 
             app.UseAuthorization();
 
