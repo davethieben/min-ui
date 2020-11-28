@@ -7,5 +7,24 @@
 <body>
     Ahoy
 
+    <div>
+        <select id="forecast-type1"
+                on="load => fetch('/api/weatherForecast/types') | map('')">
+        </select>
+        <select id="forecast-type2" 
+                on="load, change => fetch('/api/weatherForecast/?type=$value') | fill('#weather-forecast')">
+            <option value="1">one</option>
+            <option value="2">two</option>
+            <option value="3">three</option>
+        </select>
+    </div>
+    <div>
+        <select id="weather-forecast">
+
+        </select>
+    </div>
+
+
+    <script type="text/javascript" src="js/min.js"></script>
 </body>
 </html>
