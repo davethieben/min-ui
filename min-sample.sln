@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sample", "src\sample\sample.csproj", "{7F3FBAAB-F8CF-466B-9F5C-EA9FB98C88E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinUiSample", "src\sample\MinUiSample.csproj", "{7F3FBAAB-F8CF-466B-9F5C-EA9FB98C88E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

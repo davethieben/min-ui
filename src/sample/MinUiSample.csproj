@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <AssemblyName>MinUiSample</AssemblyName>
+        <RootNamespace>MinUiSample</RootNamespace>
+    </PropertyGroup>
+
+
+    <Target Name="CopySource" AfterTargets="Build">
+        <ItemGroup>
+            <_FilesToCopy Include="..\..\dist\**" />
+        </ItemGroup>
+
+        <Copy SourceFiles="@(_FilesToCopy)" DestinationFolder="wwwroot/js" />
+    </Target>
+
+</Project>

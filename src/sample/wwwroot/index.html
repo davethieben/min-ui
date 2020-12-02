@@ -2,22 +2,27 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>min-ui sample</title>
+    <link type="text/css" href="css/site.css" rel="stylesheet" />
 </head>
 <body>
-    Ahoy
+    <h1>min-ui sample</h1>
 
-    <div>
+    <section>
+        <h2>Fetch &amp; Fill</h2>
+
         <select id="forecast-type1"
-                on="load => fetch('/api/weatherForecast/types') | map('')">
+                on="'load' => fetch('/api/weatherForecast/locations') | map('')">
         </select>
+
         <select id="forecast-type2" 
-                on="load, change => fetch('/api/weatherForecast/?type=$value') | fill('#weather-forecast')">
+                on="'load, change' => fetch('/api/weatherForecast/?location=$value') | fill('#weather-forecast')">
             <option value="1">one</option>
             <option value="2">two</option>
             <option value="3">three</option>
         </select>
-    </div>
+    </section>
+
     <div>
         <select id="weather-forecast">
 
