@@ -4,8 +4,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <AssemblyName>MinUiSample</AssemblyName>
         <RootNamespace>MinUiSample</RootNamespace>
+        <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     </PropertyGroup>
-
 
     <Target Name="CopySource" AfterTargets="Build">
         <ItemGroup>

@@ -15,7 +15,7 @@
     "main": "index.js",
     "dependencies": {
         "inversify": "^5.0.1",
-        "reflect-metadata": "^0.1.13"
+        "reflect-metadata": "^0.1.12"
     },
     "scripts": {
         "build": "webpack"

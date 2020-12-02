@@ -1,0 +1,6 @@
+
+*.js
+!webpack.config.js
+*.map
+
+wwwroot/js/min.*

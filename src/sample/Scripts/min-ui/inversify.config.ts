@@ -1,4 +1,5 @@
-﻿import { Container } from "inversify";
+﻿import "reflect-metadata";
+import { Container } from "inversify";
 
 import { Services } from "./types";
 import { Command, Commands } from "./commands/command";
