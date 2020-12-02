@@ -4,27 +4,34 @@
     "description": "minimal ui framework",
     "author": "Dave Thieben",
     "homepage": "https://github.com/davethieben/min-ui#readme",
-    "repository": {
+    "repository":
+    {
         "type": "git",
         "url": "git+https://github.com/davethieben/min-ui.git"
     },
-    "bugs": {
+    "bugs":
+    {
         "url": "https://github.com/davethieben/min-ui/issues"
     },
     "license": "MIT",
     "main": "index.js",
-    "dependencies": {
+    "dependencies":
+    {
         "inversify": "^5.0.1",
+        "jquery": "^3.5.1",
         "reflect-metadata": "^0.1.12"
     },
-    "scripts": {
-        "build": "webpack"
-    },
-    "devDependencies": {
+    "devDependencies":
+    {
         "@types/jquery": "^3.5.4",
         "ts-loader": "^8.0.11",
         "typescript": "^4.1.2",
         "webpack": "^5.6.0",
         "webpack-cli": "^4.2.0"
+    },
+    "scripts":
+    {
+        "build": "webpack",
+        "watch": "webpack --watch"
     }
 }

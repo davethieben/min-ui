@@ -13,6 +13,9 @@ module.exports = {
     resolve: {
         extensions: [".ts", ".js"]
     },
+    optimization: {
+        minimize: false
+    },
     output: {
         filename: "min.js",
         path: path.resolve(__dirname, "../wwwroot/js"),

@@ -1,4 +1,4 @@
-﻿import { inject } from "inversify";
+﻿import { inject, injectable } from "inversify";
 import container from "./inversify.config";
 import { Services } from "./types";
 import { IExecutor } from "./services/executor";
@@ -13,6 +13,7 @@ declare global
     }
 }
 
+@injectable()
 export class Min
 {
     constructor(
@@ -28,16 +29,16 @@ export class Min
 
         const commands = this._parser.parse(target);
 
-        async function execute()
+        const execute = async () =>
         {
-            const args = { target };
+            const args = { root: target };
             for (const command of commands)
             {
                 if (!await this._executor.invokeAsync(command, args))
                     break;
             }
 
-            console.debug("App.init done");
+            console.debug("Min.init done");
         }
 
         execute();
@@ -50,7 +51,7 @@ export class Min
 
     public static bootstrap(): Min
     {
-        const min = container.get<Min>(Services.Min);
+        const min = container.resolve(Min);
         min.init();
 
         window.min = min;

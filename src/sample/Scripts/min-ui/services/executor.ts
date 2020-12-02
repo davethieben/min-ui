@@ -1,10 +1,11 @@
 ﻿import { injectable } from "inversify";
 import { Command } from "../commands/command.js";
+import { ParsedCommand } from "./parser.js";
 
 export interface IExecutor
 {
     register(command: Command | { new(): any; }): void;
-    invokeAsync(command: any, args: any): Promise<boolean>;
+    invokeAsync(command: ParsedCommand, args: any): Promise<boolean>;
 }
 
 @injectable()

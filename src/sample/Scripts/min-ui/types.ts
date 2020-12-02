@@ -1,10 +1,9 @@
 ﻿
 const Services = {
-    Min: Symbol("Min"),
-    Executor: Symbol("Executor"),
-    LogFactory: Symbol("LogFactory"),
-    Parser: Symbol("Parser"),
-    Publisher: Symbol("Publisher"),
+    Executor: Symbol.for("Executor"),
+    LogFactory: Symbol.for("LogFactory"),
+    Parser: Symbol.for("Parser"),
+    Publisher: Symbol.for("Publisher"),
 };
 
 export { Services };
