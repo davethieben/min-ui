@@ -9,11 +9,15 @@
     <h1>min-ui sample</h1>
 
     <section>
-        <h2>Fetch &amp; Fill</h2>
+        <h2>Fetch</h2>
+
+        <p>The fetch command can be used to retrieve XHR data:</p>
 
         <select id="forecast-type1"
                 on="'load' => fetch('/api/weatherForecast/locations') | map('')">
         </select>
+
+        <p>The fill command can then use the data to append elements to a DOM element.</p>
 
         <select id="forecast-type2" 
                 on="'load, change' => fetch('/api/weatherForecast/?location=$value') | fill('#weather-forecast')">
@@ -23,11 +27,13 @@
         </select>
     </section>
 
-    <div>
+    <section>
+        <h2>Foreign Keys</h2>
+
         <select id="weather-forecast">
 
         </select>
-    </div>
+    </section>
 
 
     <script type="text/javascript" src="js/min.js"></script>
