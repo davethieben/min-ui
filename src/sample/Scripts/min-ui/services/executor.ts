@@ -1,45 +1,34 @@
-﻿import { injectable } from "inversify";
-import { Command } from "../commands/command.js";
-import { ParsedCommand } from "./parser.js";
+﻿import { inject, injectable, multiInject } from "inversify";
+import { Services } from "../types";
 
-export interface IExecutor
+import { MinEvent } from "../models/parsedInvocation";
+import { Command, Commands } from "../commands/command";
+import { IPublisher } from "./publisher";
+
+export interface IExecutor 
 {
-    register(command: Command | { new(): any; }): void;
-    invokeAsync(command: ParsedCommand, args: any): Promise<boolean>;
+    handleEvent(minEvent: MinEvent): void;
 }
 
 @injectable()
 export class Executor implements IExecutor
 {
-    private _runners = new Array<Command>();
-
-    constructor()
+    constructor(
+        @inject(Services.Publisher) private _publisher: IPublisher,
+        @multiInject(Commands.Command) private _commands: Command[])
     {
+        _publisher.subscribe("*", this.handleEvent);
+
     }
 
-    public register(command: Command | (new () => any))
+    public handleEvent(minEvent: MinEvent)
     {
-        let ctor = command as { new(): any; };
-        if (ctor !== undefined)
+        for (const step of minEvent.data.steps)
         {
-            command = new ctor();
+            console.log(`instruction - on '${minEvent.type}' executing: '${step}'`);
+
         }
 
-        let impl = command as Command;
-        impl && this._runners.push(impl);
     }
-
-    public async invokeAsync(command: any, args: any): Promise<boolean>
-    {
-        for (let index = 0; index < this._runners.length; index++)
-        {
-            const result = await this._runners[index].invokeAsync(command, args);
-            if (!result)
-                return result;
-        }
-
-        return true;
-    }
-
 
 }

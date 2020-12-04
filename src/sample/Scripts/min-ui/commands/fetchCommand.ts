@@ -1,5 +1,6 @@
 ﻿import { injectable } from "inversify";
-import { Command } from "./command.js";
+import { Command } from "./command";
+import { ParsedInvocation } from "../models/parsedInvocation";
 
 interface FetchOptions
 {
@@ -10,12 +11,14 @@ interface FetchOptions
 @injectable()
 export class FetchCommand implements Command
 {
-    async invokeAsync(command: any, args: any): Promise<boolean>
+    public get name() { return "fetch"; };
+
+    async invokeAsync(invocation: ParsedInvocation, args: any): Promise<boolean>
     {
         args = args || {};
         args.fetch = args.fetch || {};
 
-        const options = command?.fetch as FetchOptions;
+        const options = args?.fetch as FetchOptions;
         if (options !== undefined)
         {
             args.fetch.response = await fetch(options.url, options.init || {});

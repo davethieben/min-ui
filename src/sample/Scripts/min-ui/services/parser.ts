@@ -1,10 +1,12 @@
 ﻿import { inject, injectable } from "inversify";
-import { Services } from "../types.js";
-import { ILogFactory, ILogger } from "./logFactory.js";
+import { Services } from "../types";
+
+import { ParsedInvocation, ParsedInstruction } from "../models/parsedInvocation";
+import { ILogFactory, ILogger } from "./logFactory";
 
 export interface IParser
 {
-    parse(fragment: JQuery<HTMLElement> | HTMLElement): ParsedCommand[];
+    parse(fragment: JQuery<HTMLElement> | HTMLElement): ParsedInvocation[];
 }
 
 @injectable()
@@ -17,9 +19,46 @@ export class Parser implements IParser
         this._logger = logFactory.createLogger("Parser");
     }
 
-    public parse(fragment: JQuery<HTMLElement> | HTMLElement): ParsedCommand[]
+    public parse(fragment: JQuery<HTMLElement> | HTMLElement): ParsedInvocation[]
     {
-        var commands = new Array<ParsedCommand>();
+        const invocations = this.find(fragment);
+
+        // ex1: on="load => fetch('/api/weatherForecast/locations'); change => alert('hi $value') "
+        // ex2: on="load, change => fetch('/api/weatherForecast/?location=$value') | fill('#weather-forecast')">
+
+        for (const invocation of invocations)
+        {
+            const lines = invocation.commandText.split(";");
+            for (const line of lines)
+            {
+                const parsed = /^([A-Za-z, ]+)=>(.+)$/
+                    .exec(line);
+
+                if (parsed?.length >= 3)
+                {
+                    const instr = new ParsedInstruction();
+
+                    const eventText = parsed[1]?.trim();
+                    instr.events = eventText.split(",");
+
+                    const stepsText = parsed[2]?.trim();
+                    instr.steps = stepsText.split("|");
+
+                    invocation.instructions.push(instr);
+                }
+                else
+                {
+                    this._logger.warn(`Invalid instruction: "${line}"`);
+                }
+            }
+        }
+
+        return invocations;
+    }
+
+    private find(fragment: JQuery<HTMLElement> | HTMLElement): ParsedInvocation[]
+    {
+        const invocations = new Array<ParsedInvocation>();
 
         var jqElem = fragment as JQuery<HTMLElement>;
         if (jqElem?.jquery === undefined)
@@ -28,29 +67,10 @@ export class Parser implements IParser
         jqElem.find("[on]")
             .each((index: number, element: HTMLElement) =>
             {
-                this._logger.debug(`found: ${element}`);
-
-                let commandText = element.attributes.getNamedItem("on")?.value as string;
-                //commandText = (commandText || "").replace(/\'/g, "\"");
-                //let parsed = JSON.parse(commandText);
-
-                //if (!jQuery.isArray(parsed))
-                //    parsed = [parsed];
-
-                commands.push({
-                    originalTarget: element,
-                    commandText
-                });
+                invocations.push(new ParsedInvocation(element));
             });
 
-        return commands;
+        return invocations;
     }
-
-}
-
-export class ParsedCommand
-{
-    public originalTarget?: HTMLElement;
-    public commandText?: string;
 
 }

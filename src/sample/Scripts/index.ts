@@ -2,7 +2,7 @@ import Min from "./min-ui/min-ui";
 
 (() =>
 {
-    window.addEventListener("load", () =>
+    window.addEventListener("load", (e) =>
     {
         Min.bootstrap();
 

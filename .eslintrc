@@ -1,6 +1,10 @@
 {
-    "rules":
-    {
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "sourceType": "module"
+    },
+    "rules": {
+        "quotes": [ "error", "double" ], 
         "@typescript-eslint/no-explicit-any": "off"
     }
 }

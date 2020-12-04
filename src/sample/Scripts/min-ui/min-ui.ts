@@ -1,9 +1,9 @@
 ﻿import { inject, injectable } from "inversify";
 import container from "./inversify.config";
 import { Services } from "./types";
-import { IExecutor } from "./services/executor";
 import { IParser } from "./services/parser";
 import { IPublisher } from "./services/publisher";
+import { MinEvent } from "./models/parsedInvocation";
 
 declare global
 {
@@ -16,9 +16,10 @@ declare global
 @injectable()
 export class Min
 {
+    static readonly EVENT_NAMESPACE = ".min-ui";
+
     constructor(
         @inject(Services.Parser) private _parser: IParser,
-        @inject(Services.Executor) private _executor: IExecutor,
         @inject(Services.Publisher) private _publisher: IPublisher)
     {
     }
@@ -27,26 +28,39 @@ export class Min
     {
         target = target || document.body;
 
-        const commands = this._parser.parse(target);
+        const invocations = this._parser.parse(target);
 
-        const execute = async () =>
+        for (const invocation of invocations)
         {
-            const args = { root: target };
-            for (const command of commands)
+            for (const instruction of invocation.instructions)
             {
-                if (!await this._executor.invokeAsync(command, args))
-                    break;
+                for (let eventName of instruction.events)
+                {
+                    if (eventName && eventName.length)
+                    {
+                        eventName = eventName.trim() + Min.EVENT_NAMESPACE;
+
+                        const handler = (minEvent: MinEvent) =>
+                        {
+                            this._publisher.handleEvent(minEvent);
+                        };
+
+                        $(invocation.originalTarget).on(eventName, instruction, handler);
+
+                        instruction.dispose = () =>
+                        {
+                            $(invocation.originalTarget).off(eventName);
+                        };
+                    }
+                }
             }
 
-            console.debug("Min.init done");
+            $(invocation.originalTarget).triggerHandler("load" + Min.EVENT_NAMESPACE);
         }
 
-        execute();
-    }
+        $(target).triggerHandler("load" + Min.EVENT_NAMESPACE);
 
-    public on(eventName: string, callback: (args: any) => void): Function
-    {
-        return this._publisher.subscribe(eventName, callback);
+        console.debug("Min.init done");
     }
 
     public static bootstrap(): Min

@@ -1,33 +1,59 @@
 ﻿import { injectable } from "inversify";
+import { Collection } from "../models/collection";
+import { Dictionary } from "../models/dictionary";
+import { MinEvent } from "../models/parsedInvocation";
 
 export interface IPublisher
 {
-    subscribe(name: string, callback: (args: any) => void): Function;
+    subscribe(type: string, callback: ((e: MinEvent) => void)): Function;
 
+    handleEvent(minEvent: MinEvent): void;
 }
 
 @injectable()
 export class Publisher implements IPublisher
 {
-    private _registrations: { [key: string]: any; } = {};
+    private _registrations = new RegistrationCollection();
 
-    subscribe(name: string, callback: (args: any) => void): Function
+    public subscribe(type: string, callback: ((e: MinEvent) => void)): Function
     {
-        let registrations = this._registrations[name] as any[];
-        if (registrations === undefined)
-        {
-            registrations = new Array<any>();
-            this._registrations[name] = registrations;
-        }
+        return this._registrations.add(type, callback);
+    }
 
-        registrations.push(callback);
+    public handleEvent(minEvent: MinEvent)
+    {
+        let handlers = this._registrations.tryGet(minEvent.type) || new Collection<Callback>();
+        handlers = handlers.concat(this._registrations.tryGet("*"));
+
+        for (const handler of handlers)
+        {
+            handler.fn(minEvent);
+        }
+    }
+
+}
+
+class RegistrationCollection extends Dictionary<string, Collection<Callback>>
+{
+    public add(type: string, callback: ((e: MinEvent) => void)): Function
+    {
+        const typeRegistrations = this.getOrAdd(type, () => new Collection<Callback>(cb => cb.id));
+
+        const container = { id: ++RegistrationCollection._counter, fn: callback };
+        typeRegistrations.push(container);
 
         return () =>
         {
-            var i = registrations.indexOf(callback);
-            if (i >= 0 && i < registrations.length)
-                registrations = registrations.splice(i, 1);
+            typeRegistrations.tryRemove(container);
         };
     }
 
+    static _counter = 0;
+
+}
+
+interface Callback
+{
+    id: number;
+    fn: ((e: MinEvent) => void);
 }

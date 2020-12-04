@@ -1,10 +1,13 @@
-﻿
+﻿import { ParsedInvocation } from "../models/parsedInvocation";
+
 export interface Command
 {
-    invokeAsync(command: any, args: any): Promise<boolean>;
+    name: string;
+    invokeAsync(invocation: ParsedInvocation, args: any): Promise<boolean>;
 }
 
 export const Commands = {
-    FetchCommand: "FetchCommand",
-    FillCommand: "FillCommand"
+    Command: Symbol.for("Command"),
+    FetchCommand: Symbol.for("FetchCommand"),
+    FillCommand: Symbol.for("FillCommand")
 };
