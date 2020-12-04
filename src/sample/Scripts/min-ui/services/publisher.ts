@@ -23,7 +23,10 @@ export class Publisher implements IPublisher
     public handleEvent(minEvent: MinEvent)
     {
         let handlers = this._registrations.tryGet(minEvent.type) || new Collection<Callback>();
-        handlers = handlers.concat(this._registrations.tryGet("*"));
+        const globalHandlers = this._registrations.tryGet("*");
+
+        if (globalHandlers !== undefined && globalHandlers.length)
+            handlers = handlers.concat(globalHandlers);
 
         for (const handler of handlers)
         {

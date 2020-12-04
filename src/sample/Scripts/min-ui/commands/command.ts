@@ -1,9 +1,8 @@
-﻿import { ParsedInvocation } from "../models/parsedInvocation";
-
+﻿
 export interface Command
 {
     name: string;
-    invokeAsync(invocation: ParsedInvocation, args: any): Promise<boolean>;
+    create(fnName: string): ((args: any) => Promise<boolean>);
 }
 
 export const Commands = {

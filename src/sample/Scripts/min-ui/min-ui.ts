@@ -1,9 +1,10 @@
-﻿import { inject, injectable } from "inversify";
+﻿import { Container, inject, injectable } from "inversify";
 import container from "./inversify.config";
 import { Services } from "./types";
 import { IParser } from "./services/parser";
 import { IPublisher } from "./services/publisher";
 import { MinEvent } from "./models/parsedInvocation";
+import { IExecutor } from "./services/executor";
 
 declare global
 {
@@ -20,15 +21,18 @@ export class Min
 
     constructor(
         @inject(Services.Parser) private _parser: IParser,
-        @inject(Services.Publisher) private _publisher: IPublisher)
+        @inject(Services.Publisher) private _publisher: IPublisher,
+        @inject(Services.Executor) private _executor: IExecutor,)
     {
     }
 
     public init(target?: HTMLElement)
     {
+        this._executor.start();
+
         target = target || document.body;
 
-        const invocations = this._parser.parse(target);
+        const invocations = this._parser.parseInvocations(target);
 
         for (const invocation of invocations)
         {
@@ -63,8 +67,13 @@ export class Min
         console.debug("Min.init done");
     }
 
-    public static bootstrap(): Min
+    public static bootstrap(setup?: ((container: Container) => void)): Min
     {
+        if (setup !== undefined)
+        {
+            setup(container);
+        }
+
         const min = container.resolve(Min);
         min.init();
 

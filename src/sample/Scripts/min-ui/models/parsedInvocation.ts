@@ -18,6 +18,23 @@ export class ParsedInvocation
 export class ParsedInstruction
 {
     public events?: string[];
-    public steps?: string[];
+    public steps: ParsedStep[] = [];
     public dispose: Function = () => { };
+}
+
+export class ParsedStep
+{
+    constructor(stepText: string)
+    {
+        if (!stepText || !stepText.length)
+            throw new Error("stepText is required");
+
+        this.rawText = stepText;
+    }
+
+    public rawText?: string;
+    public compiled?: ((args: any) => Promise<boolean>);
+    public parameters: any[];
+
+
 }

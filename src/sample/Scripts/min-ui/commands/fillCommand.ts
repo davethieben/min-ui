@@ -1,6 +1,5 @@
 ﻿import { injectable } from "inversify";
 import { Command } from "./command";
-import { ParsedInvocation } from "../models/parsedInvocation";
 
 interface FillOptions
 {
@@ -14,13 +13,23 @@ export class FillCommand implements Command
 {
     public get name() { return "fill"; };
 
+    public create(fnName: string): ((args: any) => Promise<boolean>)
+    {
+        if (fnName?.toLowerCase() === "fill")
+        {
+            return this.invokeAsync;
+        }
+
+        return undefined;
+    }
+
     /**
      * fills a DOM element template with the results of a fetch call
      * @param command instructions for this command
      * @param args fetch results piped in from previous command
      * @example {'fill': {'select': '#teams', 'type': 'option'}
      */
-    async invokeAsync(invocation: ParsedInvocation, args: any): Promise<boolean>
+    async invokeAsync(args: any): Promise<boolean>
     {
         const fetch = args?.fetch?.response as Response;
         const options = args?.fill as FillOptions;

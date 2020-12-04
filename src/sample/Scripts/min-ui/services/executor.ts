@@ -1,34 +1,52 @@
-﻿import { inject, injectable, multiInject } from "inversify";
+﻿import { inject, injectable } from "inversify";
 import { Services } from "../types";
 
 import { MinEvent } from "../models/parsedInvocation";
-import { Command, Commands } from "../commands/command";
 import { IPublisher } from "./publisher";
 
 export interface IExecutor 
 {
-    handleEvent(minEvent: MinEvent): void;
+    start(): void;
+    stop(): void;
 }
 
 @injectable()
 export class Executor implements IExecutor
 {
-    constructor(
-        @inject(Services.Publisher) private _publisher: IPublisher,
-        @multiInject(Commands.Command) private _commands: Command[])
+    private _unsubscribe: Function;
+
+    constructor(@inject(Services.Publisher) private _publisher: IPublisher)
     {
-        _publisher.subscribe("*", this.handleEvent);
+    }
+
+    public start()
+    {
+        this._unsubscribe = this._publisher.subscribe("*", this.handleEvent);
 
     }
 
-    public handleEvent(minEvent: MinEvent)
+    public stop()
     {
-        for (const step of minEvent.data.steps)
+        this._unsubscribe?.call(this);
+
+    }
+
+    async handleEvent(minEvent: MinEvent): Promise<void>
+    {
+        const instruction = minEvent.data;
+        const context = { e: minEvent, instruction };
+
+        for (const step of instruction.steps)
         {
-            console.log(`instruction - on '${minEvent.type}' executing: '${step}'`);
+            if (step.compiled !== undefined)
+            {
+                console.log(`instruction - on '${minEvent.type}' executing: '${step.rawText}'`);
 
+                const result = await step.compiled({ ...context, parameters: step.parameters });
+                if (!result)
+                    break;
+            }
         }
-
     }
 
 }

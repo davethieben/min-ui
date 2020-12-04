@@ -18,8 +18,8 @@ container.bind<IPublisher>(Services.Publisher).to(Publisher).inSingletonScope();
 container.bind<ILogFactory>(Services.LogFactory).to(LogFactory);
 
 
-container.bind<Command>(Commands.Command).to(FetchCommand);
-container.bind<Command>(Commands.Command).to(FillCommand);
+//container.bind<Command>(Commands.Command).to(FetchCommand);
+//container.bind<Command>(Commands.Command).to(FillCommand);
 
 
 export default container;
